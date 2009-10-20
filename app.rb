@@ -34,7 +34,7 @@ end
 
 get '/random' do
   #@def = Definition.get( rand(Definition.count) + 1)
-  @def = Definition.all.shuffle.first
+  @def = Definition.all.sort_by{rand}.first
   haml :random
 end
 
