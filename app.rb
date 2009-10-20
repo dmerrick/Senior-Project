@@ -24,7 +24,7 @@ end
  
 post '/' do
   content = params[:content]
-  raise "Nil definition" if content.empty?
+  raise "You must enter a definition." if content.empty?
   
   ip = request.env['REMOTE_ADDR'].split(",").first
   
