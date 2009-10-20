@@ -4,7 +4,7 @@ require 'rubygems'
 require 'sinatra'
 require 'dm-timestamps'
 #require 'dm-aggregates'
-require 'Haml'
+require 'haml'
 
 require 'models/definition'
 
