@@ -1,79 +1,142 @@
-#!/usr/bin/ruby
+#!/usr/bin/ruby -KU
 
 require 'rubygems'
 require 'sinatra'
-require 'dm-timestamps'
-#require 'dm-aggregates'
 require 'haml'
+require 'dm-core'
+require 'dm-timestamps'
 
-require 'models/definition'
+require 'models/registration'
+
+require 'pp'
 
 configure do
+  set :base_url, "http://kindle.doesntexist.com/"
+  
   set :root, File.dirname(__FILE__)
   disable :static
 
   DataMapper.setup(:default, ENV['DATABASE_URL'] || 'sqlite3:development.db')
+
+  Registration.auto_upgrade!
   DataMapper.auto_upgrade!
-
-  Definition.auto_upgrade!
 end
 
-get '/' do
+helpers do
+  include Rack::Utils
+  alias_method :h, :escape_html
+  
+  def protected!
+    unless authorized?
+      response['WWW-Authenticate'] = %(Basic realm="Kindle Controller")
+      #throw(:halt, [401, "Not authorized\n"])
+      haml :non_kindle
+    end
+  end
+
+  def authorized?
+    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['test', 'test']
+  end
+  
+  def tell_iTunes_to( command )
+    return "osascript -e 'tell application \"iTunes\" to " + command + "'"
+  end
+end
+
+load 'routes/kindle.rb'
+load 'routes/nonkindle.rb'
+
+# the only route we have for the command line (at the moment)
+get '/cmd' do
+  haml :cmd
+end
+
+load 'routes/itunes.rb'
+
+# the catch-all route
+get '/?*' do
   haml :index
 end
- 
-post '/' do
-  content = params[:content]
-  raise "You must enter a definition." if content.empty?
-  
-  ip = request.env['REMOTE_ADDR'].split(",").first
-  
-  @def = Definition.first_or_create(:content => content, :ip => ip)
-  haml :new
-end
 
-get '/random' do
-  #@def = Definition.get( rand(Definition.count) + 1)
-  @def = Definition.all.sort_by{rand}.first
-  haml :random
-end
-
-error do
-  haml :index
-end
- 
-use_in_file_templates!
 
 __END__
 @@ layout
 !!! 1.1
 %html
   %head
-    %title What is time?
-    %link{:rel => 'stylesheet', :href => 'http://www.w3.org/StyleSheets/Core/Swiss', :type => 'text/css'}  
+    %title Kindle Controller
   %body
     = yield
     #err.warning= env['sinatra.error']
     #footer
-      %br
-        %a{:href => '/'}>= 'new'
-        ,&nbsp;
-        %a{:href => '/random'}>= 'random'
-      %br
       %small &copy; DM
- 
+
 @@ index
-%h1.title What is time?
-%form{:method => 'post', :action => '/'}
-  Time is:
-  %input{:type => 'text', :name => 'content', :size => '50'} 
-  %input{:type => 'submit', :value => 'submit!'}
+%a{:href => '/play'}>= 'play'
+\-
+%a{:href => '/pause'}>= 'pause'
+\-
+%a{:href => '/stop'}>= 'stop'
+%br
+%a{:href => '/prev'}>= 'prev'
+\-
+%a{:href => '/next'}>= 'next'
+%br
+%a{:href => '/vol_up'}>= 'vol+'
+\-
+%a{:href => '/vol_down'}>= 'vol-'
+%br
+%a{:href => '/mute'}>= 'mute'
+\-
+%a{:href => '/unmute'}>= 'unmute'
+%br
+%a{:href => '/status'}>= 'show current track'
+%br
+%a{:href => '/quit'}>= 'quit iTunes'
+%br
+%a{:href => '/cmd'}>= 'show command line'
 
-@@ new
-%h1.title Thanks for your time!
-- unless @def.nil?
-  = @def.content
+@@ status
+#{locals[:track_details]}
+%br
 
-@@ random
-%h1.title Time is...
-= @def.content
+@@ cmd
+%textarea
+%br
+
+@@ non_kindle
+Welcome to the non-Kindle side of things!
+%br
+%a{:href => '/nonkindle/generate'}>= 'Add New Kindle'
+%br
+%a{:href => '/nonkindle/devices'}>= 'List All Registrations'
+%br
+%a{:href => '/nonkindle/clear_all'}>= 'Clear All Pending Registrations'
+
+@@ generate
+Please go to the following URL on your Kindle:
+%br
+#{@url}
+
+@@ register
+Your Kindle is now registered!
+TODO: Actually register
+
+@@ devices
+Here is the list of existing registrations:
+%ul
+- @registrations_with_colors.each do |reg,color|
+  %li{:style=>"color:#{color};" }= reg.ip + " : " + options.base_url + "kindle/register/" + reg.content
+%br
+Items in red have yet to be activated. Click&nbsp;
+%a{:href => '/nonkindle/clear_all'}>= 'here'
+&nbsp;to clear them.
+
+@@ invalid_alphanum
+Sorry, we could not find a pending Kindle registration with ID #{@alphanum}.
+Please try generating a new URL.
+
+@@ registration_used
+The Kindle registration with ID #{@alphanum} has already been used.
+For security reasons, please generate a new URL.
