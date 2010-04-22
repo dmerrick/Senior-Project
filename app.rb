@@ -39,7 +39,11 @@ helpers do
   # returns true if proviced the correct credentials
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['test', 'test']
+    
+    # read credentials
+    credentials = open("credentials.txt").read.split("\n").map{|c| c !~ /^#/ ? c : nil}.compact
+    
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == credentials
   end
   
   # returns true if a valid cookie is on the device
