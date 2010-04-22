@@ -38,7 +38,7 @@ get '/kindle/register/:alphanum' do
     registration.save!
     
     ## reroute to confirmation page
-    haml :index
+    haml :register
   end
   
 
@@ -60,9 +60,7 @@ end
 # the catch-all route
 # either sends the user to the kindle index or redirects them
 get '/?*' do  
-  if has_valid_cookie?
-    haml :index
-  else
-    haml :need_to_register
-  end
+  check_valid_cookie!
+  
+  haml :index
 end

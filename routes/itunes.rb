@@ -52,7 +52,7 @@ get '/kindle/vol_down' do
   pass
 end
 
-get '/kindle/status' do
+get '/kindle/status' do    
   state = `#{tell_iTunes_to("player state as string")}`
   state.to_s.strip!
   track_details = "iTunes is currently #{state}"

@@ -1,0 +1,6 @@
+Please go to the following URL on your Kindle:
+%br
+%textarea{:cols=>@url.length, :rows=> 1}
+  #{@url}
+%br
+%a{:href => '/nonkindle/'}>= 'Back to Home'

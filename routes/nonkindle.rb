@@ -1,6 +1,6 @@
-# the regexp for the Kindle user agent
+# the regexp for everything but the Kindle user agent
 agent = /^(?:(?!\bKindle\b).)*$/
-  
+
 get '/nonkindle/generate/?', :agent => agent  do
   protected!
   
@@ -38,7 +38,7 @@ get '/nonkindle/clear_all/?', :agent => agent do
     reg.destroy!
   end
 
-  pass  
+  haml :devices
 end
 
 # the catch-all route for non-Kindles
