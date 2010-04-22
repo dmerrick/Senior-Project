@@ -48,7 +48,7 @@ load 'routes/kindle.rb'
 load 'routes/nonkindle.rb'
 
 # the only route we have for the command line (at the moment)
-get '/cmd' do
+get '/kindle/cmd' do
   haml :cmd
 end
 
@@ -73,29 +73,29 @@ __END__
       %small &copy; DM
 
 @@ index
-%a{:href => '/play'}>= 'play'
+%a{:href => '/kindle/play'}>= 'play'
 \-
-%a{:href => '/pause'}>= 'pause'
+%a{:href => '/kindle/pause'}>= 'pause'
 \-
-%a{:href => '/stop'}>= 'stop'
+%a{:href => '/kindle/stop'}>= 'stop'
 %br
-%a{:href => '/prev'}>= 'prev'
+%a{:href => '/kindle/prev'}>= 'prev'
 \-
-%a{:href => '/next'}>= 'next'
+%a{:href => '/kindle/next'}>= 'next'
 %br
-%a{:href => '/vol_up'}>= 'vol+'
+%a{:href => '/kindle/vol_up'}>= 'vol+'
 \-
-%a{:href => '/vol_down'}>= 'vol-'
+%a{:href => '/kindle/vol_down'}>= 'vol-'
 %br
-%a{:href => '/mute'}>= 'mute'
+%a{:href => '/kindle/mute'}>= 'mute'
 \-
-%a{:href => '/unmute'}>= 'unmute'
+%a{:href => '/kindle/unmute'}>= 'unmute'
 %br
-%a{:href => '/status'}>= 'show current track'
+%a{:href => '/kindle/status'}>= 'show current track'
 %br
-%a{:href => '/quit'}>= 'quit iTunes'
+%a{:href => '/kindle/quit'}>= 'quit iTunes'
 %br
-%a{:href => '/cmd'}>= 'show command line'
+%a{:href => '/kindle/cmd'}>= 'show command line'
 
 @@ status
 #{locals[:track_details]}

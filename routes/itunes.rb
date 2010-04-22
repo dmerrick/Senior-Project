@@ -1,58 +1,58 @@
-get '/play' do
+get '/kindle/play' do
   system tell_iTunes_to("play") 
   pass
 end
 
-get '/pause' do
+get '/kindle/pause' do
   system tell_iTunes_to("pause") 
   pass
 end
 
-get '/stop' do
+get '/kindle/stop' do
   system tell_iTunes_to("stop") 
   pass
 end
 
-get '/next' do
+get '/kindle/next' do
   system tell_iTunes_to("next track") 
   pass
 end
 
-get '/prev' do
+get '/kindle/prev' do
   system tell_iTunes_to("previous track")
   pass
 end
 
-get '/mute' do
+get '/kindle/mute' do
   system tell_iTunes_to("set mute to true") 
   pass
 end
 
-get '/unmute' do
+get '/kindle/unmute' do
   system tell_iTunes_to("set mute to false") 
   pass
 end
 
-get '/quit' do
+get '/kindle/quit' do
   system tell_iTunes_to("quit") 
   pass
 end
 
-get '/vol_up' do
+get '/kindle/vol_up' do
   vol = `#{tell_iTunes_to("sound volume as integer")}`
   vol = vol.to_i + 10
   system tell_iTunes_to("set sound volume to #{vol}")
   pass
 end
 
-get '/vol_down' do
+get '/kindle/vol_down' do
   vol = `#{tell_iTunes_to("sound volume as integer")}`
   vol = vol.to_i - 10
   system tell_iTunes_to("set sound volume to #{vol}")
   pass
 end
 
-get '/status' do
+get '/kindle/status' do
   state = `#{tell_iTunes_to("player state as string")}`
   state.to_s.strip!
   track_details = "iTunes is currently #{state}"
