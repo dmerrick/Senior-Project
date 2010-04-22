@@ -25,9 +25,14 @@ get '/kindle/register/:alphanum' do
     
     # put cookie on device
     cookie = request.cookies["kindle"]
-    cookie ||= @alphanum
-    set_cookie("kindle", cookie)
-    puts "Cookie with ID #@alphanum has been placed on the device."
+    cookie = @alphanum # formerly ||=
+    response.set_cookie("kindle",
+      :expires => Time.now + 60*60*24*100,
+      :value => cookie,
+      :secure => true
+    )
+    #set_cookie("kindle",cookie)
+    puts "Cookie with ID #@alphanum has been placed on the device at #{registration.ip}."
     
     # save the registration
     registration.save!
@@ -37,4 +42,27 @@ get '/kindle/register/:alphanum' do
   end
   
 
+end
+
+# read the itunes-specific routes
+load 'routes/itunes.rb'
+
+# the only route we have for the command line (at the moment)
+get '/kindle/cmd' do
+  haml :cmd
+end
+
+# debug method to delete cookie off device
+get '/d' do
+  response.delete_cookie("kindle")
+end
+
+# the catch-all route
+# either sends the user to the kindle index or redirects them
+get '/?*' do  
+  if has_valid_cookie?
+    haml :index
+  else
+    haml :need_to_register
+  end
 end

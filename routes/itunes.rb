@@ -63,5 +63,5 @@ get '/kindle/status' do
     track_details = artist.to_s + " : " + track.to_s
   end
   
-  haml :status, :locals => { :track_details => track_details }
+  haml :index, :locals => { :track_details => track_details }
 end

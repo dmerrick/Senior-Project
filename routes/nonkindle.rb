@@ -1,4 +1,7 @@
-get '/nonkindle/generate/?', :agent => /^(?:(?!\bKindle\b).)*$/  do
+# the regexp for the Kindle user agent
+agent = /^(?:(?!\bKindle\b).)*$/
+  
+get '/nonkindle/generate/?', :agent => agent  do
   protected!
   
   # log the IP for security purposes
@@ -10,7 +13,7 @@ get '/nonkindle/generate/?', :agent => /^(?:(?!\bKindle\b).)*$/  do
   haml :generate
 end
 
-get '/nonkindle/devices/?', :agent => /^(?:(?!\bKindle\b).)*$/  do
+get '/nonkindle/devices/?', :agent => agent do
   protected!
   
   # show list of devices
@@ -26,7 +29,7 @@ get '/nonkindle/devices/?', :agent => /^(?:(?!\bKindle\b).)*$/  do
   haml :devices
 end
 
-get '/nonkindle/clear_all/?', :agent => /^(?:(?!\bKindle\b).)*$/ do
+get '/nonkindle/clear_all/?', :agent => agent do
   protected!
   
   unused_registrations = Registration.all(:used => false)
@@ -39,7 +42,7 @@ get '/nonkindle/clear_all/?', :agent => /^(?:(?!\bKindle\b).)*$/ do
 end
 
 # the catch-all route for non-Kindles
-get '/?*', :agent => /^(?:(?!\bKindle\b).)*$/  do
+get '/?*', :agent => agent do
   protected!
   haml :non_kindle
 end
