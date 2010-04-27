@@ -4,7 +4,7 @@ Here is the list of existing registrations:
   %li You have no active/pending registrations.
 - else
   - @registrations_with_colors.each do |reg,color|
-    %li{:style=>"color:#{color};" }= reg.ip + " : " + options.base_url + "kindle/register/" + reg.content
+    %li{:style=>"color:#{color};" }= h(reg.ip) + " : " + options.base_url + "kindle/register/" + h(reg.content)
 %br
 Items in red have yet to be activated. Click&nbsp;
 %a{:href => '/nonkindle/clear_all'}>= 'here'
