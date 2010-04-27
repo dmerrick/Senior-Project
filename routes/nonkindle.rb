@@ -1,5 +1,11 @@
-# the regexp for everything but the Kindle user agent
-agent = /^(?:(?!\bKindle\b).)*$/
+unless $DEBUG
+  # the regexp for everything but the Kindle user agent
+  agent = /^(?:(?!\bKindle\b).)*$/
+else
+  # I used Chrome in lieu of the Kindle for debugging
+  agent = /^(?:(?!\bChrome\b).)*$/
+end
+
 
 get '/nonkindle/generate/?', :agent => agent  do
   protected!
@@ -8,6 +14,7 @@ get '/nonkindle/generate/?', :agent => agent  do
   ip = request.env['REMOTE_ADDR'].split(",").first
   reg = Registration.create(:ip => ip)
   
+  # generate the URL with the new Registration
   @url = options.base_url + "kindle/register/" + reg.content
   
   haml :generate
