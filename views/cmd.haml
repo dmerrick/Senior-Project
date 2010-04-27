@@ -1,2 +1,8 @@
-%textarea
+%textarea{:name => 'history', :rows=> 50, :cols => 50}
+  #{@all_commands}
+%form{:method => 'post', :action => '/kindle/cmd'}
+  %textarea{:name => 'command', :rows=> 4, :cols => 50}
+  %br
+  %input{:type => 'submit', :value => 'run!'}
 %br
+%a{:href => '/kindle/'}>= 'Back to Home'
