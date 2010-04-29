@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -KU
 
 # for debugging
-$DEBUG = true
+#$DEBUG = true
 require 'pp' if $DEBUG
 
 require 'rubygems'
@@ -83,7 +83,7 @@ end
 
 
 # define the routes
-load 'routes/debug.rb' if $DEBUG
-load 'routes/nonkindle.rb'
-load 'routes/kindle.rb'
+load 'controller/debug.rb' if $DEBUG
+load 'controller/nonkindle.rb'
+load 'controller/kindle.rb'
 

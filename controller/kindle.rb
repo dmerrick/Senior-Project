@@ -52,8 +52,8 @@ end
 
 
 # read the kindle-specific route files
-load 'routes/itunes.rb'
-load 'routes/command.rb'
+load 'controller/itunes.rb'
+load 'controller/command.rb'
 
 
 # send everything else to the kindle index
