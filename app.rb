@@ -46,7 +46,7 @@ helpers do
     end
   end
 
-  # returns true if proviced the correct credentials
+  # returns true if provided the correct credentials
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
     
