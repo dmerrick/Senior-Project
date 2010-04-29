@@ -1,8 +1,10 @@
-%textarea{:name => 'history', :rows=> 50, :cols => 50}
-  #{@all_commands}
+%textarea{:id => 'ta', :name => 'history', :rows=> 19, :cols => 50} #{@all_commands}
 %form{:method => 'post', :action => '/kindle/cmd'}
   %textarea{:name => 'command', :rows=> 4, :cols => 50}
   %br
   %input{:type => 'submit', :value => 'run!'}
+:javascript
+  ta = document.getElementById('ta');
+  ta.scrollTop = ta.scrollHeight;
 %br
 %a{:href => '/kindle/'}>= 'Back to Home'
