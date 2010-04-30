@@ -58,8 +58,6 @@ helpers do
   
   # returns true if a valid cookie is on the device
   def valid_cookie?
-    # FIXME: a problem with cookies is making me short-circuit this
-    return true if $DEBUG
     
     cookie = request.cookies["kindle"]
     
@@ -71,6 +69,7 @@ helpers do
       puts "Registration: " + (reg.nil? ? "nil" : reg.to_s )
     end
     
+    return true if $DEBUG
     return !reg.nil?
   end
   
@@ -80,7 +79,6 @@ helpers do
   end
   
 end
-
 
 # define the routes
 load 'controller/debug.rb' if $DEBUG
